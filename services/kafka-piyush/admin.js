@@ -1,0 +1,27 @@
+const { kafka } = require("./client");
+
+
+async function init() {
+  // create and connect admin
+  const admin = kafka.admin();
+  console.log("Admin connecting...");
+  await admin.connect();
+  console.log("Adming Connection Success...");
+
+  console.log("Creating Topic [rider-updates]");
+  // create a topic name rider-updates along with partitions
+  await admin.createTopics({
+    topics: [
+      {
+        topic: "rider-updates",
+        numPartitions: 2,
+      },
+    ],
+  });
+  console.log("Topic Created Success [rider-updates]");
+
+  console.log("Disconnecting Admin..");
+  await admin.disconnect();
+}
+
+init();
