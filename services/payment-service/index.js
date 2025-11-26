@@ -5,7 +5,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    origin: "http://localhost:5173/"
+    origin: "http://localhost:3001"
 }))
 app.use(express.json())
 
@@ -26,6 +26,7 @@ const connectToKafka = async (req, res) => {
 
 // create payment route
 app.post('/payment-service' , async (req, res) => {
+    console.log("Entered in the payment service")
     const { cart } = req.body;
     // ASSUME THAT WE GET THE COOKIE AND DECRYPT THE USER ID
     const userId = "123";
