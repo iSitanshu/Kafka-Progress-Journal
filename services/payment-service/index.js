@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors"
 import { Kafka } from "kafkajs";
 const app = express();
-const PORT = 3000;
+const PORT = 8000;
 
 app.use(cors({
-    origin: "http://localhost:3001"
+    origin: "http://localhost:3000"
 }))
 app.use(express.json())
 
