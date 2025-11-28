@@ -11,17 +11,43 @@ const run = async () => {
   try {
     await consumer.connect();
     await consumer.subscribe({
-      topic: "payment-successful",
+      topics: ["payment-successful", "order-successful", "email-successful"],
       fromBeginning: true,
     });
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        const value = message.value.toString();
-        const { userId, cart } = JSON.parse(value);
+        switch (topic) {
+          case "payment-successful":
+            {
+              const value = message.value.toString();
+              const { userId, cart } = JSON.parse(value);
 
-        const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);        
-        console.log(`Analytic consumer: User ${userId} paid ${total}`);
+              const total = cart
+                .reduce((sum, item) => sum + item.price, 0)
+                .toFixed(2);
+              console.log(`Analytic consumer: User ${userId} paid ${total}`);
+            }
+            break;
+
+          case "order-successful":
+            {
+              const value = message.value.toString();
+              const { userId, orderId } = JSON.parse(value);
+              
+              console.log(`Analytic consumer: Order ${orderId} Created for user Id ${userId}`);
+            }
+            break;
+            
+            case "email-successful":
+              {
+                const value = message.value.toString();
+                const { userId, emailId } = JSON.parse(value); 
+                
+                console.log(`Analytic consumer: Email Id ${emailId} sent to user Id ${userId}`);
+            }
+            break;
+        }
       },
     });
   } catch (error) {

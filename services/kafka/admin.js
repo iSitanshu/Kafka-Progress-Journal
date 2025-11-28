@@ -13,6 +13,7 @@ const run = async () => {
         topics: [
             {topic: 'order-successful'},
             {topic: 'payment-successful'},
+            {topic: 'analytic-successful'}
         ]
     })
     console.log("Topics created Successfully");

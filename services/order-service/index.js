@@ -5,8 +5,8 @@ const kafka = new Kafka({
   brokers: ["localhost:9094"],
 });
 
-const consumer = kafka.consumer({ groupId: "analytic-service" });
-const producer = kafka.connect();
+const consumer = kafka.consumer({ groupId: "order-service" });
+const producer = kafka.producer();
 
 const run = async () => {
   try {
@@ -22,10 +22,16 @@ const run = async () => {
         const value = message.value.toString();
         const { userId, cart } = JSON.parse(value);
 
-        const total = cart
-          .reduce((sum, item) => sum + item.price, 0)
-          .toFixed(2);
-        console.log(`Analytic consumer: User ${userId} paid ${total}`);
+        // TODO: Create order on DB
+        const dummyOrderId = "123456789";
+        console.log(`Order Consumer: Order created for userId: ${userId}`)
+
+        await producer.send({
+          topic: "order-successful",
+          messages: [
+            { value: JSON.stringify({ userId, orderId: dummyOrderId }) },
+          ],
+        });
       },
     });
   } catch (error) {
